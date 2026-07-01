@@ -1,0 +1,7 @@
+Model,R2 Score,RMSE,MAE,Cross Validation
+Gradient Boosting,0.9073,26659.4,15859.79,0.9025
+Lasso Regression,0.8957,28286.5,18276.06,0.8249
+ElasticNet,0.8917,28819.92,18548.79,0.8386
+Random Forest,0.8871,29432.69,17584.24,0.8703
+Linear Regression,0.8757,30873.42,20208.28,0.8374
+Ridge Regression,0.844,34595.74,20721.87,0.8089

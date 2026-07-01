@@ -201,28 +201,6 @@ streamlit run app/app.py
 
 ---
 
-# 📷 Application Preview
-
-Add screenshots of your application here.
-
-Suggested screenshots:
-
-- Home Page
-- Prediction Results
-- Feature Importance Chart
-
-Example:
-
-```
-screenshots/home.png
-
-screenshots/prediction.png
-
-screenshots/dashboard.png
-```
-
----
-
 # 📌 Future Improvements
 
 - Hyperparameter Optimization

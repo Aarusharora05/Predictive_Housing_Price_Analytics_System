@@ -53,20 +53,15 @@ st.sidebar.write(
     "Built using Python, Scikit-learn and Streamlit."
 )
 
-st.title("🏠 Predictive Housing Price Analytics System")
+st.title("🏡 Predictive Housing Price Analytics System")
 
-st.caption("Machine Learning Powered Property Valuation System")
+st.caption("Machine Learning Powered Residential Property Valuation")
 
-st.markdown(
-    """
-Predict house prices using a trained **Gradient Boosting Regressor**.
+st.info(
+"""
+Select a neighborhood and choose a similar property.
 
-Model Performance
-
-- R² Score : **0.9073**
-- Cross Validation : **0.9025**
-
-Select a house from the dataset and modify important features to estimate its new market value.
+Modify its characteristics to estimate the updated market value using Machine Learning.
 """
 )
 
@@ -80,31 +75,78 @@ housing = pd.read_csv(DATA_PATH)
 
 model = joblib.load(MODEL_PATH)
 
-st.header("Select House")
+st.header("🏘️ Select a Property")
 
-house_id = st.selectbox(
-    "Choose a House ID",
-    housing["Id"]
+# -----------------------------------
+# Select Neighborhood
+# -----------------------------------
+
+neighborhood = st.selectbox(
+    "Select Neighborhood",
+    sorted(housing["Neighborhood"].unique())
 )
 
-selected_house = housing[
-    housing["Id"] == house_id
+filtered_houses = housing[
+    housing["Neighborhood"] == neighborhood
 ].copy()
 
-house = housing.loc[housing["Id"] == house_id].iloc[0].copy()
+filtered_houses["Display"] = (
 
-st.subheader("Selected House")
+    filtered_houses["Neighborhood"]
 
-c1, c2, c3 = st.columns(3)
+    + " | "
+
+    + filtered_houses["GrLivArea"].astype(str)
+
+    + " sq.ft"
+
+    + " | Built "
+
+    + filtered_houses["YearBuilt"].astype(str)
+
+)
+
+selected_display = st.selectbox(
+
+    "Available Properties",
+
+    filtered_houses["Display"]
+
+)
+
+selected_house = filtered_houses[
+    filtered_houses["Display"] == selected_display
+].copy()
+
+house = selected_house.iloc[0].copy()
+
+st.subheader("Selected Property")
+
+c1, c2, c3, c4 = st.columns(4)
 
 with c1:
-    st.metric("Neighborhood", house["Neighborhood"])
+    st.metric(
+        "Neighborhood",
+        house["Neighborhood"]
+    )
 
 with c2:
-    st.metric("Original Price", f"${house['SalePrice']:,.0f}")
+    st.metric(
+        "Living Area",
+        f"{house['GrLivArea']} sq.ft."
+    )
 
 with c3:
-    st.metric("Year Built", int(house["YearBuilt"]))
+    st.metric(
+        "Year Built",
+        int(house["YearBuilt"])
+    )
+
+with c4:
+    st.metric(
+        "Original Price",
+        f"${house['SalePrice']:,.0f}"
+    )
 
 st.markdown("---")
 
@@ -201,7 +243,7 @@ house["TotalLivingArea"] = (
 st.markdown("---")
 
 predict = st.button(
-    "🔍 Predict House Price",
+    "🏠 Estimate Property Value",
     use_container_width=True,
     type="primary"
 )
@@ -237,7 +279,7 @@ if predict:
         st.metric(
             "Difference",
             f"${difference:,.0f}",
-            delta=f"{difference:,.0f}"
+            delta=f"{difference/actual_price:.1%}"
         )
 
     if difference > 0:
@@ -253,7 +295,7 @@ if predict:
     
     st.markdown("---")
 
-    st.subheader("House Summary")
+    st.subheader("Prediction Inputs")
 
     summary = pd.DataFrame({
 
